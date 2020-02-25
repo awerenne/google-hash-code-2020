@@ -1,6 +1,6 @@
 
 import time
-import io
+from io import *
 
 
 def place_value(number): 
@@ -9,23 +9,23 @@ def place_value(number):
 
 def solve(fname):
     _, _, n_days, book_values, libraries = read("input/" + fname + ".txt")
-    original_book_values = list(books_values)
-    solution = compute_greedy(libraries, n_days)
-    score = write("output/" + fname + ".txt", solution, original_book_values)
+    solution = compute_greedy(list(book_values), libraries, n_days)
+    score = write("output/" + fname + ".txt", solution, book_values)
     return score
 
-        def clear_books(self):
-        for idx_book in self.output:
-            self.book_values[idx_book] = 0
+
+def remove_books(book_values, book_indices):
+    for idx in book_indices:
+        book_values[idx] = 0
 
 
-def compute_greedy(libraries, n_days):
+def compute_greedy(book_values, libraries, n_days):
     day = 0
     solution = []
     while day < n_days and libraries:
         index, library = find_best_library(libraries) 
-        library.clear_books()
-        solution.append(library)
+        remove_books(library.shipped_books)
+        solution.append(book_values, library)
         libraries.pop(index)
         day += library.signup_time
     return solution
