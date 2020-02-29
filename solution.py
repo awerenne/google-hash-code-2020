@@ -1,6 +1,6 @@
 
 import time
-from io import *
+from iohandlers import read, write
 
 
 def place_value(number): 
@@ -15,31 +15,31 @@ def solve(fname):
 
 
 def remove_books(book_values, book_indices):
-    for idx in book_indices:
-        book_values[idx] = 0
+    for index in book_indices:
+        book_values[index] = 0
 
 
 def compute_greedy(book_values, libraries, n_days):
     day = 0
     solution = []
     while day < n_days and libraries:
-        index, library = find_best_library(libraries) 
-        remove_books(library.shipped_books)
-        solution.append(book_values, library)
+        index, library = find_best_library(libraries, n_days-day) 
+        remove_books(book_values, library.shipped_books)
+        solution.append(library)
         libraries.pop(index)
-        day += library.signup_time
+        day += library.sign_time
     return solution
 
 
-def find_best_library(libraries):
+def find_best_library(libraries, n_remaining_days):
     max_score = -float("Inf")
     for index, library in enumerate(libraries):
         library.sort_books()
-        score = library.get_score(n_days - day)
+        score = library.compute_score(n_remaining_days)
         if score > max_score:
             max_score = score
             max_library = library
-            max_index = idx
+            max_index = index
     return max_index, max_library
 
 
@@ -54,7 +54,6 @@ if __name__ == "__main__":
         print("File %s" % (fname))
         print("\t score: %s" % (place_value(score)))
         print("\t runtime: %.2f" % (time.time() - start_time))
-        print(score)
     print("\nTotal score: %s" % (place_value(total_score)))
 
 
